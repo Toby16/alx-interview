@@ -4,22 +4,36 @@
  * A script that prints all characters of a Star Wars movie
  */
 
+const request = require('request');
+
 const arg = process.argv[2];
 // console.log(arg);
 
-fetch('https://swapi-api.alx-tools.com/api/films/' + arg + '/')
-  .then(response => response.json())
+// Function to make a GET request using the request module
+function makeRequest (url) {
+  return new Promise((resolve, reject) => {
+    request(url, (error, response, body) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(JSON.parse(body));
+      }
+    });
+  });
+}
+
+makeRequest('https://swapi-api.alx-tools.com/api/films/' + arg + '/')
   .then(data => {
     // List of endpoints to characters object
     const dataCharacters = data.characters;
 
-    dataCharacters.forEach(item => {
-      fetch(item)
-        .then(response => response.json())
-        .then(data => {
-          console.log(data.name);
-        })
-        .catch(error => console('Error:', error));
+    const promises = dataCharacters.map(item => {
+      return makeRequest(item).then(characterData => {
+        console.log(characterData.name);
+      });
     });
+
+    // Wait for all promises to resolve
+    return Promise.all(promises);
   })
   .catch(error => console.error('Error:', error));
