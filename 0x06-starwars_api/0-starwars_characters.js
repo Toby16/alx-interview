@@ -22,18 +22,18 @@ function makeRequest (url) {
   });
 }
 
-makeRequest('https://swapi-api.alx-tools.com/api/films/' + arg + '/')
-  .then(data => {
-    // List of endpoints to characters object
-    const dataCharacters = data.characters;
+async function printCharacterNames () {
+  try {
+    const filmData = await makeRequest('https://swapi-api.alx-tools.com/api/films/' + arg + '/');
+    const dataCharacters = filmData.characters;
 
-    const promises = dataCharacters.map(item => {
-      return makeRequest(item).then(characterData => {
-        console.log(characterData.name);
-      });
-    });
+    for (const characterUrl of dataCharacters) {
+      const characterData = await makeRequest(characterUrl);
+      console.log(characterData.name);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
 
-    // Wait for all promises to resolve
-    return Promise.all(promises);
-  })
-  .catch(error => console.error('Error:', error));
+printCharacterNames();
