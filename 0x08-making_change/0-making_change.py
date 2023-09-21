@@ -22,8 +22,19 @@ def makeChange(coins, total):
         The minimum number of coins needed to make the total.
         If it's not possible to make the total with the given coins, return -1.
     """
-    if total < 0 or not coins:
+    if total <= 0:
+        return 0
+
+    if not coins:
         return -1
+
+    # The value of a coin will always be an integer greater than 0
+    """
+    # Gather all coins that are greater than 0
+    # and 'less then or equal to `total`'
+    """
+    if len(coins) != 0:
+        new_coins = [i for i in coins if ((i > 0) and (i <= total))]
 
     # Initialize a list
     # to store the minimum number of coins for each amount from 0 to total.
@@ -33,7 +44,7 @@ def makeChange(coins, total):
     dp[0] = 0
 
     # Iterate through each coin value.
-    for coin in coins:
+    for coin in new_coins:
         # Update dp[i] if using this coin reduces the number of coins needed
         # to make amount i.
         for i in range(coin, total + 1):
