@@ -54,7 +54,10 @@ def island_perimeter(grid):
 
     # print(horizontal_sum)  # Output: [3, 7]
     # print(vertical_sum)    # Output: 10
-    return vertical_sum
+    # return vertical_sum
+    perimeter_val = vertical_sum * 2
+
+    return perimeter_val
 
 
 if __name__ == "__main__":
