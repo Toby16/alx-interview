@@ -24,40 +24,22 @@ def island_perimeter(grid):
                 (ie. water inside that isn’t connected to the water
                 surrounding the island)
     """
-    """
-    a = 0
-    while a < len(grid):
-        print("i[{}] = {}".format(a, grid[a]))
-        a += 1
+    perimeter = 0
 
-    print()
+    # Define directions (up, down, left, right)
+    directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
-    i = 0
-    while i < len(grid):
-        j = 0
-        while j < len(grid[i]):
-            # Determine the position of each cells
-            if grid[i][j] == 1:
-                print("i[{}] * j[{}] = {}".format(i, j, grid[i][j]))
-            j += 1
-        i += 1
+    for row in range(len(grid)):
+        for col in range(len(grid[row])):
+            if grid[row][col] == 1:
+                for dr, dc in directions:
+                    r, c = row + dr, col + dc
+                    if r < 0 or r >= len(grid)\
+                            or c < 0 or c >= len(grid[0])\
+                            or grid[r][c] == 0:
+                        perimeter += 1
 
-
-    print()
-    """
-
-    # Sum horizontally
-    horizontal_sum = [sum(row) for row in grid]
-
-    # Sum vertically
-    vertical_sum = sum(horizontal_sum) + 1
-
-    # print(horizontal_sum)  # Output: [3, 7]
-    # print(vertical_sum)    # Output: 10
-    # return vertical_sum
-    perimeter_val = vertical_sum * 2
-
-    return perimeter_val
+    return perimeter
 
 
 if __name__ == "__main__":
