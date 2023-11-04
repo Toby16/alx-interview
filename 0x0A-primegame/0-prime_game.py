@@ -4,57 +4,30 @@ Prime Game
 """
 
 
-def is_prime(num):
-    """
-    Function: is_prime
-    => to check if a number is prime
-    """
-    if num < 2:
-        return False
-    for i in range(2, int(num ** 0.5) + 1):
-        if num % i == 0:
-            return False
-    return True
-
-
 def isWinner(x, nums):
     """
-    Function: isWinner
-    => to determine the winner of the game
+    Determines the winner of a prime game session with `x` rounds.
     """
-
-    winners = {'Maria': 0, 'Ben': 0}
-
-    for i in range(x):
-        n = nums[i]
-        primes = [num for num in range(2, n + 1) if is_prime(num)]
-        turn = 'Maria'
-
-        while len(primes) > 0:
-            to_remove = -1
-            for j in range(len(primes)):
-                if n % primes[j] == 0:
-                    to_remove = primes[j]
-                    break
-
-            if to_remove != -1:
-                primes = [num for num in primes if num % to_remove != 0]
-                turn = 'Maria' if turn == 'Ben' else 'Ben'
-            else:
-                break
-
-        if turn == 'Maria':
-            winners['Maria'] += 1
-        else:
-            winners['Ben'] += 1
-
-    max_wins = max(winners.values())
-    result = [key for key, value in winners.items() if value == max_wins]
-
-    if len(result) > 1:
+    if x < 1 or not nums:
         return None
-    else:
-        return result[0]
+    marias_wins, bens_wins = 0, 0
+    # generate primes with a limit of the maximum number in nums
+    n = max(nums)
+    primes = [True for _ in range(1, n + 1, 1)]
+    primes[0] = False
+    for i, is_prime in enumerate(primes, 1):
+        if i == 1 or not is_prime:
+            continue
+        for j in range(i + i, n + 1, i):
+            primes[j - 1] = False
+    # filter the number of primes less than n in nums for each round
+    for _, n in zip(range(x), nums):
+        primes_count = len(list(filter(lambda x: x, primes[0: n])))
+        bens_wins += primes_count % 2 == 0
+        marias_wins += primes_count % 2 == 1
+    if marias_wins == bens_wins:
+        return None
+    return 'Maria' if marias_wins > bens_wins else 'Ben'
 
 
 if __name__ == "__main__":
