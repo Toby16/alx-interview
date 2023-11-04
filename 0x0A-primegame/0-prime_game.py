@@ -2,32 +2,59 @@
 """
 Prime Game
 """
-from round_winner import round_winner
 
 
-def isWinner(x, num):
+def is_prime(num):
     """
-    Function to determine the winner of the game,
-    after x number of rounds
+    Function: is_prime
+    => to check if a number is prime
     """
-    ben, maria = 0, 0
+    if num < 2:
+        return False
+    for i in range(2, int(num ** 0.5) + 1):
+        if num % i == 0:
+            return False
+    return True
+
+
+def isWinner(x, nums):
+    """
+    Function: isWinner
+    => to determine the winner of the game
+    """
+
+    winners = {'Maria': 0, 'Ben': 0}
 
     for i in range(x):
-        # The winner of each round gets 1 (a single) point
-        winner = round_winner(num[i])
-        if winner == "Ben":
-            ben += 1
-        elif winner == "Maria":
-            maria += 1
+        n = nums[i]
+        primes = [num for num in range(2, n + 1) if is_prime(num)]
+        turn = 'Maria'
 
-    # The player with the highest points after a full game wins
-    # The both playes get same or no points, there is no winner (None)
-    if ben > maria:
-        return "Ben"
-    elif maria > ben:
-        return "Maria"
-    else:
+        while len(primes) > 0:
+            to_remove = -1
+            for j in range(len(primes)):
+                if n % primes[j] == 0:
+                    to_remove = primes[j]
+                    break
+
+            if to_remove != -1:
+                primes = [num for num in primes if num % to_remove != 0]
+                turn = 'Maria' if turn == 'Ben' else 'Ben'
+            else:
+                break
+
+        if turn == 'Maria':
+            winners['Maria'] += 1
+        else:
+            winners['Ben'] += 1
+
+    max_wins = max(winners.values())
+    result = [key for key, value in winners.items() if value == max_wins]
+
+    if len(result) > 1:
         return None
+    else:
+        return result[0]
 
 
 if __name__ == "__main__":
